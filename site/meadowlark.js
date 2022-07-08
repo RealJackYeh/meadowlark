@@ -3,6 +3,7 @@ const {engine} = require('express-handlebars')
 
 const app = express()
 const fortune = require('./lib/fortune')
+const handlers = require('./lib/handlers') // for unit test
 
 // configure Handlebars view engine
 app.engine('handlebars', engine({
@@ -15,11 +16,11 @@ app.use(express.static(__dirname + '/public'))
 
 const port = process.env.PORT || 3000
 
-app.get('/', (req, res) => res.render('home'))
+app.get('/', handlers.home)
 
-app.get('/about', (req, res) => {
-    res.render('about', { fortune: fortune.getFortune() })
-})
+app.get('/about', handlers.about)
+app.use(handlers.notFound)
+app.use(handlers.serverError)
 
 /*
 // custom 404 page
