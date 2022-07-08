@@ -2,7 +2,6 @@ const express = require('express')
 const {engine} = require('express-handlebars')
 
 const app = express()
-const fortune = require('./lib/fortune')
 const handlers = require('./lib/handlers') // for unit test
 
 // configure Handlebars view engine
@@ -36,6 +35,16 @@ app.use((err, req, res, next) => {
   res.render('500')
 })
 */
+/*
 app.listen(port, () => console.log(
   `Express started on http://localhost:${port}; ` +
   `press Ctrl-C to terminate.`))
+*/
+  if(require.main === module) {
+    app.listen(port, () => {
+        console.log(`Express started on http://localhost:${port}` +
+        '; press Ctrl-C to terminate.')
+    })
+} else {
+    module.exports = app
+}

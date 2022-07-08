@@ -4,7 +4,8 @@
   "description": "test project",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint meadowlark.js lib"
   },
   "author": "Jack Yeh",
   "license": "ISC",
@@ -13,6 +14,9 @@
     "express-handlebars": "^6.0.6"
   },
   "devDependencies": {
-    "jest": "^28.1.2"
+    "eslint": "^8.19.0",
+    "jest": "^28.1.2",
+    "portfinder": "^1.0.28",
+    "puppeteer": "^15.3.1"
   }
 }
