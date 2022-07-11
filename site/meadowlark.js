@@ -18,6 +18,24 @@ const port = process.env.PORT || 3000
 app.get('/', handlers.home)
 
 app.get('/about', handlers.about)
+app.get('/headers', (req, res) => {
+  res.type('text/plain')
+  const headers = Object.entries(req.headers)
+    .map(([key, value]) => `${key}: ${value}`)
+  res.send(headers.join('\n'))
+  console.log('req.ip = ' + req.ip)
+  console.log('req.url = ' + req.url)
+  console.log('req.originalUrl = ' + req.originalUrl)
+})
+app.get('/greeting', (req, res) => {
+  res.render('greeting', {
+    message: 'Hello Jack Yeh',
+    style: req.query.style,
+    userid: req.cookies.userid,
+    //username: req.session.username
+  })
+})
+app.get('/no-layout', (req, res) => res.render('no-layout', { layout: null }))
 app.use(handlers.notFound)
 app.use(handlers.serverError)
 
