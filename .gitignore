@@ -3,4 +3,4 @@ node_modules
 web-development-with-node-and-express-2e
 .DS_STORE
 coverage
-.log
+log
