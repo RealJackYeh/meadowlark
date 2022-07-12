@@ -1,3 +1,31 @@
-<h1>Welcome to Meadowlark Travel</h1>
-<p>Questions? Checkout our
-    <a href="/about" data-test-id="about">About Us</a> Page!</p>
+<!-- see views/layouts/main.hbs for the "rest" of the HTML! -->
+<h2>Tell Us About Yourself</h2>
+<form action="/process" method="post">
+  <div>
+    <label>Your name:
+      <input name="name" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Your email:
+      <input name="email" type="email" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Simulator error:
+      <input type="checkbox" name="simulateError" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <label>Use Ajax?:
+      <input type="checkbox" name="useAjax" />
+    </label>
+  </div>
+  <br />
+  <div>
+    <button type="submit">Submit</button>
+  </div>
+</form>

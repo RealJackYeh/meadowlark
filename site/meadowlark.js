@@ -1,8 +1,21 @@
 const express = require('express')
 const {engine} = require('express-handlebars')
-
 const app = express()
 const handlers = require('./lib/handlers') // for unit test
+const bodyParser = require('body-parser')
+const morgan = require('morgan')
+const fs = require('fs')
+
+switch(app.get('env')) {
+  case 'development':
+    app.use(morgan('dev'))
+    break
+  case 'production':
+    const stream = fs.createWriteStream(__dirname + '/access.log',
+    { flags: 'a'})
+    app.use(morgan('combined', { stream }))
+    break
+}
 
 // configure Handlebars view engine
 app.engine('handlebars', engine({
@@ -10,13 +23,9 @@ app.engine('handlebars', engine({
   layoutsDir: __dirname + '/views/layouts'
 }))
 app.set('view engine', 'handlebars')
-
 app.use(express.static(__dirname + '/public'))
-
 const port = process.env.PORT || 3000
-
 app.get('/', handlers.home)
-
 app.get('/about', handlers.about)
 app.get('/headers', (req, res) => {
   res.type('text/plain')
@@ -36,6 +45,30 @@ app.get('/greeting', (req, res) => {
   })
 })
 app.get('/no-layout', (req, res) => res.render('no-layout', { layout: null }))
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+app.post('/process', (req, res) => {
+  //console.log(req.headers)
+  //console.log(req.body)
+  res.send({ result: 'success' })
+})
+const multiparty = require('multiparty')
+app.post('/processfile', (req, res) => {
+  const form = new multiparty.Form()
+  form.parse(req, (err, fields, files) => {
+    if (err) return res.status(500).send({ error: err.message })
+    //console.log('field data: ', fields)
+    //console.log('files: ', files)
+    res.send({ result: 'success' })
+  })
+})
+const tours = [
+  {id:0, name: 'Jack Yeh', price: 99.99},
+  {id:1, name: 'Melissa Yu', price: 149.99},
+]
+app.get('/api/tours', (req, res) => {
+  res.json(tours)
+})
 app.use(handlers.notFound)
 app.use(handlers.serverError)
 
@@ -58,11 +91,11 @@ app.listen(port, () => console.log(
   `Express started on http://localhost:${port}; ` +
   `press Ctrl-C to terminate.`))
 */
-  if(require.main === module) {
-    app.listen(port, () => {
+if(require.main === module) {
+  app.listen(port, () => {
         console.log(`Express started on http://localhost:${port}` +
-        '; press Ctrl-C to terminate.')
+        `in ${app.get('env')} mode; press Ctrl-C to terminate.`)
     })
 } else {
-    module.exports = app
+  module.exports = app
 }

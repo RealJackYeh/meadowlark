@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   <title>Bob's Auto Parts - Order Form</title>
+  </head>
+  <body>
+    <div id="SignupFormContainer">
+      <form class="form-horizontal" role="form" enctype="multipart/form-data" 
+      id="SignupForm">
+        <div>
+          <label>Your name:
+            <input name="name" />
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>Your email:
+            <input name="email" type="email" />
+          </label>
+        </div>
+        <div>
+          <label>Your file:
+            <input type="file" class="form-control" required accept="image/*" 
+            id="fieldphoto" name="photo">
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>Simulator error:
+            <input type="checkbox" name="simulateError" />
+          </label>
+        </div>
+        <br />
+        <div>
+          <label>Use Ajax?:
+            <input type="checkbox" name="useAjax" />
+          </label>
+        </div>
+        <br />
+        <div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
+
+    </div>
+    
+    <script>
+      document.getElementById('SignupForm')
+        .addEventListener('submit', evt => {
+        evt.preventDefault()
+        /*
+        const form = evt.target
+        const body = JSON.stringify({
+          name: form.elements.name.value,
+          email: form.elements.email.value,
+        })
+        */
+        const body = new FormData(evt.target)
+        //const headers = {'Content-Type': 'application/json'}
+        const container = document.getElementById('SignupFormContainer')
+        fetch('/processfile', { method: 'post', body })
+        .then(res => {
+          if(res.status < 200 || res.status >= 300)
+            throw new Error(`request failed with status ${res.status}`)
+            return res.json()
+        })
+        .then(json => {
+          container.innerHTML = '<b> Thank you for your photo! </b>'
+        })
+        .catch(err => {
+          container.innerHTML = `<b> sorry, we had a problem! ` + 
+            `signing you up. `
+        })
+      })
+    </script>
+  </body>
+</html>
