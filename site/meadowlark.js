@@ -5,6 +5,7 @@ const handlers = require('./lib/handlers') // for unit test
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const fs = require('fs')
+const cluster = require('cluster')
 
 switch(app.get('env')) {
   case 'development':
@@ -23,6 +24,11 @@ app.engine('handlebars', engine({
   layoutsDir: __dirname + '/views/layouts'
 }))
 app.set('view engine', 'handlebars')
+app.use((req, res, next) => {
+  if(cluster.isWorker)
+    console.log(`worker ${cluster.Worker.id} received request`)
+  next()
+})
 app.use(express.static(__dirname + '/public'))
 const port = process.env.PORT || 3000
 app.get('/', handlers.home)
@@ -91,11 +97,15 @@ app.listen(port, () => console.log(
   `Express started on http://localhost:${port}; ` +
   `press Ctrl-C to terminate.`))
 */
-if(require.main === module) {
+function startServer(port) {
   app.listen(port, () => {
-        console.log(`Express started on http://localhost:${port}` +
-        `in ${app.get('env')} mode; press Ctrl-C to terminate.`)
-    })
+      console.log(`Express started on http://localhost:${port}` +
+      `in ${app.get('env')} mode; press Ctrl-C to terminate.`)
+  })  
+}
+
+if(require.main === module) {
+  startServer(process.env.PORT || 3000)
 } else {
-  module.exports = app
+  module.exports = startServer
 }
