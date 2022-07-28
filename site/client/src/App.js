@@ -1,24 +1,45 @@
-import logo from './logo.svg';
+import React from 'react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link
+} from 'react-router-dom'
+import logo from './img/logo.png';
 import './App.css';
 
-function App() {
+function Home() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h2>Welcome to Jack Yeh site</h2>
+      <p>Check out our "<link to="/about">About</link>" page!</p>
     </div>
+  )
+}
+function About() {
+  return (<i>coming soon</i>)
+}
+function notFound() {
+  return (<i>Not Found</i>)
+}
+function App() {
+
+  return (
+    <Router>
+      <div className="container">
+        <header>
+          <h1>Jack Yeh page</h1>
+          <img src={logo} alt="Jack Yeh Logo" />
+          <link to="/">Home (SPA)</link>
+          <a href="/">Home (reload)</a>
+        </header>
+        <Routes>
+          <Route path="/" exact component={Home} />
+          <Route path="/about" exact component={About} />
+          <Route component={notFound} />
+        </Routes>
+      </div>
+    </Router>
   );
 }
 

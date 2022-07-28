@@ -30,6 +30,7 @@ app.use((req, res, next) => {
     console.log(`worker ${cluster.Worker.id} received request`)
   next()
 })
+//app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/public'))
 const port = process.env.PORT || 3000
 app.get('/', handlers.home)
